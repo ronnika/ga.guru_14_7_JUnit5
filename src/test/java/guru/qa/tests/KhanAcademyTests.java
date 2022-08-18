@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.Stream;
 
@@ -41,8 +42,15 @@ public class KhanAcademyTests extends KnamAcademyBaseTest {
         $("#footer").$(byText(country.getNotation())).click();
         $("#footer div[role='navigation']").shouldBe(visible);
     }
-    // ValueSource
-    // Test After entering the data in the search, "TOP results" appears
+
+    @ValueSource(strings = {"math", "biology"})
+    @ParameterizedTest(name = "After entering \"{0}\" in the searchbar \"Top results\" appears")
+    void searchBarHasSearchResultsPopupAfterEnteringDataTest(String data) {
+        open("");
+        $("a[data-test-id='navbar-search-button']").click();
+        $("input[data-test-id='page-search-box']").sendKeys(data);
+        $("div[data-test-id='search-results-popup']").shouldBe(visible);
+    }
 
     // CscSource
     // Test Custom amounts correctly how percents
