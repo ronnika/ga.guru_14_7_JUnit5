@@ -1,12 +1,7 @@
 package guru.qa.tests;
 
-
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.*;
 
 import java.util.stream.Stream;
 
@@ -15,7 +10,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
-public class KhanAcademyTests extends KnamAcademyBaseTest {
+public class KhanAcademyTests extends BaseTest {
 
     static Stream<Arguments> signUpOptionsForDifferentRolesTest() {
         return Stream.of(
@@ -28,7 +23,7 @@ public class KhanAcademyTests extends KnamAcademyBaseTest {
     @MethodSource
     @ParameterizedTest(name = "In sign up for role \"{0}\" is showed \"{1}\" text")
     void signUpOptionsForDifferentRolesTest(Roles role, String expectedText) {
-        open("signup/");
+        open("/signup");
         $("#app-shell-root").$(byText(role.toString())).click();
         $("#app-shell-root section h1").shouldHave(text("Sign up"));
         $("#app-shell-root section h2").shouldHave(text(expectedText));
@@ -52,7 +47,19 @@ public class KhanAcademyTests extends KnamAcademyBaseTest {
         $("div[data-test-id='search-results-popup']").shouldBe(visible);
     }
 
-    // CscSource
-    // Test Custom amounts correctly how percents
+    @CsvSource(value = {
+            "100,$2.50",
+            "400,$10"
+    })
+    @ParameterizedTest(name = "Transaction fee for donation amount of \"{0}\" US dollars should be calculated and displayed correctly")
+    void donateOtherAmountShouldChangeTransactionAmount(String amount, String percent) {
+        open("/donate");
+        $("input[value='month']").parent().click();
+        $(byText("Other")).click();
+        $$("input[name='amount']").last().parent().lastChild().setValue(amount);
+        $("#cc-label").shouldHave(text(percent));
+        $("input[value='once']").parent().click();
+        $("#cc-label").shouldHave(text(percent));
+    }
 }
 
