@@ -44,7 +44,7 @@ public class KhanAcademyTests extends KnamAcademyBaseTest {
     }
 
     @ValueSource(strings = {"math", "biology"})
-    @ParameterizedTest(name = "After entering \"{0}\" in the searchbar \"Top results\" appears")
+    @ParameterizedTest(name = "After entering \"{0}\" in the searchbar Search Result Popup should be visible")
     void searchBarHasSearchResultsPopupAfterEnteringDataTest(String data) {
         open("");
         $("a[data-test-id='navbar-search-button']").click();
