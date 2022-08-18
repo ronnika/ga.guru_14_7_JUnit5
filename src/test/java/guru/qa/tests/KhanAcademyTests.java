@@ -4,11 +4,13 @@ package guru.qa.tests;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -29,12 +31,16 @@ public class KhanAcademyTests extends KnamAcademyBaseTest {
         $("#app-shell-root").$(byText(role.toString())).click();
         $("#app-shell-root section h1").shouldHave(text("Sign up"));
         $("#app-shell-root section h2").shouldHave(text(expectedText));
-
     }
 
-    // EnumSource
-    // Test By clicking on country name {x} you switch to different site version and ou still have a footer
-
+    // Tест должен и будет падать для Индии, так как у Индии нет навигации в футере
+    @EnumSource(Countries.class)
+    @ParameterizedTest(name = "Site version for \"{0}\" has navigation in the footer")
+    void switchCountryVersionFooterInPlaceTest(Countries country) {
+        open("");
+        $("#footer").$(byText(country.getNotation())).click();
+        $("#footer div[role='navigation']").shouldBe(visible);
+    }
     // ValueSource
     // Test After entering the data in the search, "TOP results" appears
 
