@@ -1,15 +1,36 @@
 package guru.qa.tests;
 
-import org.junit.jupiter.api.BeforeAll;
 
-public class KhanAcademyTests {
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-    @BeforeAll
-    static void configure() {
-        // tbd
+import java.util.stream.Stream;
+
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Selenide.*;
+
+public class KhanAcademyTests extends KnamAcademyBaseTest {
+
+    static Stream<Arguments> signUpOptionsForDifferentRolesTest() {
+        return Stream.of(
+                Arguments.of(Roles.Parent, "First, create your parent account."),
+                Arguments.of(Roles.Learner, "A world class education for anyone, anywhere. 100% free."),
+                Arguments.of(Roles.Teacher, "Help every student succeed with personalized practice. 100% free.")
+        );
     }
-    // MethodSource
-    // Test Sign up options are changing for different roles
+
+    @MethodSource
+    @ParameterizedTest(name = "In sign up for role \"{0}\" is showed \"{1}\" text")
+    void signUpOptionsForDifferentRolesTest(Roles role, String expectedText) {
+        open("signup/");
+        $("#app-shell-root").$(byText(role.toString())).click();
+        $("#app-shell-root section h1").shouldHave(text("Sign up"));
+        $("#app-shell-root section h2").shouldHave(text(expectedText));
+
+    }
 
     // EnumSource
     // Test By clicking on country name {x} you switch to different site version and ou still have a footer
@@ -20,4 +41,4 @@ public class KhanAcademyTests {
     // CscSource
     // Test Custom amounts correctly how percents
 }
-}
+
