@@ -1,7 +1,7 @@
 package guru.qa.tests;
 
 public enum Countries {
-    US("U.S."), India("India"), Mexico("Mexico"), Brazil("Brazil");
+    US("U.S."), INDIA("India"), MEXICO("Mexico"), BRAZIL("Brazil");
     String notation;
 
     Countries(String notation) {
